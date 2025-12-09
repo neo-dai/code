@@ -1,4 +1,4 @@
-// This sample code implement a simple web service.
+// 这个示例代码实现一个简单的 web 服务。
 package main
 
 import (
@@ -8,7 +8,7 @@ import (
 	"github.com/goinaction/code/chapter9/listing17/handlers"
 )
 
-// main is the entry point for the application.
+// main 是应用程序的入口点。
 func main() {
 	handlers.Routes()
 

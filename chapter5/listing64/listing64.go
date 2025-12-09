@@ -1,5 +1,5 @@
-// Sample program to show how the program can't access an
-// unexported identifier from another package.
+// 示例程序，展示程序如何无法访问
+// 另一个包中的未导出标识符。
 package main
 
 import (
@@ -8,10 +8,10 @@ import (
 	"github.com/goinaction/code/chapter5/listing64/counters"
 )
 
-// main is the entry point for the application.
+// main 是应用程序的入口点。
 func main() {
-	// Create a variable of the unexported type and initialize
-	// the value to 10.
+	// 创建一个未导出类型的变量
+	// 并将值初始化为 10。
 	counter := counters.alertCounter(10)
 
 	// ./listing64.go:15: cannot refer to unexported name

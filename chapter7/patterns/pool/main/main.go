@@ -1,5 +1,5 @@
-// This sample program demonstrates how to use the pool package
-// to share a simulated set of database connections.
+// 这个示例程序演示如何使用 pool 包
+// 来共享模拟的一组数据库连接。
 package main
 
 import (
@@ -14,28 +14,28 @@ import (
 )
 
 const (
-	maxGoroutines   = 25 // the number of routines to use.
-	pooledResources = 2  // number of resources in the pool
+	maxGoroutines   = 25 // 要使用的例程数量。
+	pooledResources = 2  // 池中的资源数量
 )
 
-// dbConnection simulates a resource to share.
+// dbConnection 模拟要共享的资源。
 type dbConnection struct {
 	ID int32
 }
 
-// Close implements the io.Closer interface so dbConnection
-// can be managed by the pool. Close performs any resource
-// release management.
+// Close 实现 io.Closer 接口，以便 dbConnection
+// 可以由池管理。Close 执行任何资源
+// 释放管理。
 func (dbConn *dbConnection) Close() error {
 	log.Println("Close: Connection", dbConn.ID)
 	return nil
 }
 
-// idCounter provides support for giving each connection a unique id.
+// idCounter 为每个连接提供唯一 id 的支持。
 var idCounter int32
 
-// createConnection is a factory method that will be called by
-// the pool when a new connection is needed.
+// createConnection 是一个工厂方法，当需要
+// 新连接时，池将调用它。
 func createConnection() (io.Closer, error) {
 	id := atomic.AddInt32(&idCounter, 1)
 	log.Println("Create: New Connection", id)
@@ -43,49 +43,49 @@ func createConnection() (io.Closer, error) {
 	return &dbConnection{id}, nil
 }
 
-// main is the entry point for all Go programs.
+// main 是所有 Go 程序的入口点。
 func main() {
 	var wg sync.WaitGroup
 	wg.Add(maxGoroutines)
 
-	// Create the pool to manage our connections.
+	// 创建池来管理我们的连接。
 	p, err := pool.New(createConnection, pooledResources)
 	if err != nil {
 		log.Println(err)
 	}
 
-	// Perform queries using connections from the pool.
+	// 使用池中的连接执行查询。
 	for query := 0; query < maxGoroutines; query++ {
-		// Each goroutine needs its own copy of the query
-		// value else they will all be sharing the same query
-		// variable.
+		// 每个 goroutine 需要自己的查询值副本，
+		// 否则它们都将共享相同的查询
+		// 变量。
 		go func(q int) {
 			performQueries(q, p)
 			wg.Done()
 		}(query)
 	}
 
-	// Wait for the goroutines to finish.
+	// 等待 goroutine 完成。
 	wg.Wait()
 
-	// Close the pool.
+	// 关闭池。
 	log.Println("Shutdown Program.")
 	p.Close()
 }
 
-// performQueries tests the resource pool of connections.
+// performQueries 测试连接的资源池。
 func performQueries(query int, p *pool.Pool) {
-	// Acquire a connection from the pool.
+	// 从池中获取连接。
 	conn, err := p.Acquire()
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
-	// Release the connection back to the pool.
+	// 将连接释放回池。
 	defer p.Release(conn)
 
-	// Wait to simulate a query response.
+	// 等待以模拟查询响应。
 	time.Sleep(time.Duration(rand.Intn(1000)) * time.Millisecond)
 	log.Printf("Query: QID[%d] CID[%d]\n", query, conn.(*dbConnection).ID)
 }

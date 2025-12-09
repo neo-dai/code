@@ -1,5 +1,5 @@
-// Sample program to show how to show you how to briefly work
-// with the sql package.
+// 示例程序，展示如何简要地使用
+// sql 包。
 package main
 
 import (
@@ -8,7 +8,7 @@ import (
 	_ "github.com/goinaction/code/chapter3/dbdriver/postgres"
 )
 
-// main is the entry point for the application.
+// main 是应用程序的入口点。
 func main() {
 	sql.Open("postgres", "mydb")
 }

@@ -5,58 +5,58 @@ import (
 	"sync"
 )
 
-// A map of registered matchers for searching.
+// 用于搜索的已注册匹配器的映射。
 var matchers = make(map[string]Matcher)
 
-// Run performs the search logic.
+// Run 执行搜索逻辑。
 func Run(searchTerm string) {
-	// Retrieve the list of feeds to search through.
+	// 检索要搜索的订阅源列表。
 	feeds, err := RetrieveFeeds()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Create an unbuffered channel to receive match results to display.
+	// 创建一个无缓冲通道来接收要显示的匹配结果。
 	results := make(chan *Result)
 
-	// Setup a wait group so we can process all the feeds.
+	// 设置等待组，以便我们可以处理所有订阅源。
 	var waitGroup sync.WaitGroup
 
-	// Set the number of goroutines we need to wait for while
-	// they process the individual feeds.
+	// 设置我们需要等待的 goroutine 数量，
+	// 它们会处理各个订阅源。
 	waitGroup.Add(len(feeds))
 
-	// Launch a goroutine for each feed to find the results.
+	// 为每个订阅源启动一个 goroutine 来查找结果。
 	for _, feed := range feeds {
-		// Retrieve a matcher for the search.
+		// 检索用于搜索的匹配器。
 		matcher, exists := matchers[feed.Type]
 		if !exists {
 			matcher = matchers["default"]
 		}
 
-		// Launch the goroutine to perform the search.
+		// 启动 goroutine 执行搜索。
 		go func(matcher Matcher, feed *Feed) {
 			Match(matcher, feed, searchTerm, results)
 			waitGroup.Done()
 		}(matcher, feed)
 	}
 
-	// Launch a goroutine to monitor when all the work is done.
+	// 启动一个 goroutine 来监控所有工作何时完成。
 	go func() {
-		// Wait for everything to be processed.
+		// 等待所有内容被处理。
 		waitGroup.Wait()
 
-		// Close the channel to signal to the Display
-		// function that we can exit the program.
+		// 关闭通道以向 Display 函数发出信号，
+		// 表示我们可以退出程序。
 		close(results)
 	}()
 
-	// Start displaying results as they are available and
-	// return after the final result is displayed.
+	// 在结果可用时开始显示结果，
+	// 并在显示最终结果后返回。
 	Display(results)
 }
 
-// Register is called to register a matcher for use by the program.
+// Register 被调用以注册供程序使用的匹配器。
 func Register(feedType string, matcher Matcher) {
 	if _, exists := matchers[feedType]; exists {
 		log.Fatalln(feedType, "Matcher already registered")

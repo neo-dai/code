@@ -1,5 +1,5 @@
-// This sample program demonstrates how to create race
-// conditions in our programs. We don't want to do this.
+// 这个示例程序演示如何在程序中创建竞态条件。
+// 我们不希望这样做。
 package main
 
 import (
@@ -9,43 +9,43 @@ import (
 )
 
 var (
-	// counter is a variable incremented by all goroutines.
+	// counter 是一个被所有 goroutine 递增的变量。
 	counter int
 
-	// wg is used to wait for the program to finish.
+	// wg 用于等待程序完成。
 	wg sync.WaitGroup
 )
 
-// main is the entry point for all Go programs.
+// main 是所有 Go 程序的入口点。
 func main() {
-	// Add a count of two, one for each goroutine.
+	// 添加计数 2，每个 goroutine 一个。
 	wg.Add(2)
 
-	// Create two goroutines.
+	// 创建两个 goroutine。
 	go incCounter(1)
 	go incCounter(2)
 
-	// Wait for the goroutines to finish.
+	// 等待 goroutine 完成。
 	wg.Wait()
 	fmt.Println("Final Counter:", counter)
 }
 
-// incCounter increments the package level counter variable.
+// incCounter 递增包级别的 counter 变量。
 func incCounter(id int) {
-	// Schedule the call to Done to tell main we are done.
+	// 安排调用 Done 以告诉 main 我们已完成。
 	defer wg.Done()
 
 	for count := 0; count < 2; count++ {
-		// Capture the value of Counter.
+		// 捕获 Counter 的值。
 		value := counter
 
-		// Yield the thread and be placed back in queue.
+		// 让出线程并放回队列。
 		runtime.Gosched()
 
-		// Increment our local value of Counter.
+		// 递增 Counter 的本地值。
 		value++
 
-		// Store the value back into Counter.
+		// 将值存回 Counter。
 		counter = value
 	}
 }

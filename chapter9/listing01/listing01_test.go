@@ -1,4 +1,4 @@
-// Sample test to show how to write a basic unit test.
+// 示例测试，展示如何编写基本单元测试。
 package listing01
 
 import (
@@ -9,7 +9,7 @@ import (
 const checkMark = "\u2713"
 const ballotX = "\u2717"
 
-// TestDownload validates the http Get function can download content.
+// TestDownload 验证 http Get 函数可以下载内容。
 func TestDownload(t *testing.T) {
 	url := "http://www.goinggo.net/feeds/posts/default?alt=rss"
 	statusCode := 200

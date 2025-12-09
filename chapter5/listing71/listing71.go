@@ -1,5 +1,5 @@
-// Sample program to show how unexported fields from an exported
-// struct type can't be accessed directly.
+// 示例程序，展示如何无法直接访问
+// 导出结构类型中的未导出字段。
 package main
 
 import (
@@ -8,9 +8,9 @@ import (
 	"github.com/goinaction/code/chapter5/listing71/entities"
 )
 
-// main is the entry point for the application.
+// main 是应用程序的入口点。
 func main() {
-	// Create a value of type User from the entities package.
+	// 从 entities 包创建一个 User 类型的值。
 	u := entities.User{
 		Name:  "Bill",
 		email: "bill@email.com",

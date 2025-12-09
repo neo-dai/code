@@ -1,4 +1,4 @@
-// Sample test to show how to write a basic example.
+// 示例测试，展示如何编写基本示例。
 package handlers_test
 
 import (
@@ -9,7 +9,7 @@ import (
 	"net/http/httptest"
 )
 
-// ExampleSendJSON provides a basic example.
+// ExampleSendJSON 提供一个基本示例。
 func ExampleSendJSON() {
 	r, _ := http.NewRequest("GET", "/sendjson", nil)
 	w := httptest.NewRecorder()

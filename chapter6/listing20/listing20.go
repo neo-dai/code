@@ -1,5 +1,5 @@
-// This sample program demonstrates how to use an unbuffered
-// channel to simulate a game of tennis between two goroutines.
+// 这个示例程序演示如何使用无缓冲通道
+// 来模拟两个 goroutine 之间的网球比赛。
 package main
 
 import (
@@ -9,61 +9,61 @@ import (
 	"time"
 )
 
-// wg is used to wait for the program to finish.
+// wg 用于等待程序完成。
 var wg sync.WaitGroup
 
 func init() {
 	rand.Seed(time.Now().UnixNano())
 }
 
-// main is the entry point for all Go programs.
+// main 是所有 Go 程序的入口点。
 func main() {
-	// Create an unbuffered channel.
+	// 创建一个无缓冲通道。
 	court := make(chan int)
 
-	// Add a count of two, one for each goroutine.
+	// 添加计数 2，每个 goroutine 一个。
 	wg.Add(2)
 
-	// Launch two players.
+	// 启动两名球员。
 	go player("Nadal", court)
 	go player("Djokovic", court)
 
-	// Start the set.
+	// 开始比赛。
 	court <- 1
 
-	// Wait for the game to finish.
+	// 等待比赛结束。
 	wg.Wait()
 }
 
-// player simulates a person playing the game of tennis.
+// player 模拟一个人打网球。
 func player(name string, court chan int) {
-	// Schedule the call to Done to tell main we are done.
+	// 安排调用 Done 以告诉 main 我们已完成。
 	defer wg.Done()
 
 	for {
-		// Wait for the ball to be hit back to us.
+		// 等待球被击回给我们。
 		ball, ok := <-court
 		if !ok {
-			// If the channel was closed we won.
+			// 如果通道被关闭，我们就赢了。
 			fmt.Printf("Player %s Won\n", name)
 			return
 		}
 
-		// Pick a random number and see if we miss the ball.
+		// 选择一个随机数，看看我们是否错过了球。
 		n := rand.Intn(100)
 		if n%13 == 0 {
 			fmt.Printf("Player %s Missed\n", name)
 
-			// Close the channel to signal we lost.
+			// 关闭通道以表示我们输了。
 			close(court)
 			return
 		}
 
-		// Display and then increment the hit count by one.
+		// 显示然后将击球次数加 1。
 		fmt.Printf("Player %s Hit %d\n", name, ball)
 		ball++
 
-		// Hit the ball back to the opposing player.
+		// 将球击回对手。
 		court <- ball
 	}
 }

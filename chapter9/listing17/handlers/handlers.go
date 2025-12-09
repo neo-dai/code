@@ -1,4 +1,4 @@
-// Package handlers provides the endpoints for the web service.
+// Package handlers 为 web 服务提供端点。
 package handlers
 
 import (
@@ -6,12 +6,12 @@ import (
 	"net/http"
 )
 
-// Routes sets the routes for the web service.
+// Routes 设置 web 服务的路由。
 func Routes() {
 	http.HandleFunc("/sendjson", SendJSON)
 }
 
-// SendJSON returns a simple JSON document.
+// SendJSON 返回一个简单的 JSON 文档。
 func SendJSON(rw http.ResponseWriter, r *http.Request) {
 	u := struct {
 		Name  string

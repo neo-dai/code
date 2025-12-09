@@ -12,8 +12,8 @@ import (
 )
 
 type (
-	// item defines the fields associated with the item tag
-	// in the rss document.
+	// item 定义与 rss 文档中
+	// item 标签相关联的字段。
 	item struct {
 		XMLName     xml.Name `xml:"item"`
 		PubDate     string   `xml:"pubDate"`
@@ -24,8 +24,8 @@ type (
 		GeoRssPoint string   `xml:"georss:point"`
 	}
 
-	// image defines the fields associated with the image tag
-	// in the rss document.
+	// image 定义与 rss 文档中
+	// image 标签相关联的字段。
 	image struct {
 		XMLName xml.Name `xml:"image"`
 		URL     string   `xml:"url"`
@@ -33,8 +33,8 @@ type (
 		Link    string   `xml:"link"`
 	}
 
-	// channel defines the fields associated with the channel tag
-	// in the rss document.
+	// channel 定义与 rss 文档中
+	// channel 标签相关联的字段。
 	channel struct {
 		XMLName        xml.Name `xml:"channel"`
 		Title          string   `xml:"title"`
@@ -50,42 +50,42 @@ type (
 		Item           []item   `xml:"item"`
 	}
 
-	// rssDocument defines the fields associated with the rss document.
+	// rssDocument 定义与 rss 文档相关联的字段。
 	rssDocument struct {
 		XMLName xml.Name `xml:"rss"`
 		Channel channel  `xml:"channel"`
 	}
 )
 
-// rssMatcher implements the Matcher interface.
+// rssMatcher 实现 Matcher 接口。
 type rssMatcher struct{}
 
-// init registers the matcher with the program.
+// init 向程序注册匹配器。
 func init() {
 	var matcher rssMatcher
 	search.Register("rss", matcher)
 }
 
-// Search looks at the document for the specified search term.
+// Search 在文档中查找指定的搜索词。
 func (m rssMatcher) Search(feed *search.Feed, searchTerm string) ([]*search.Result, error) {
 	var results []*search.Result
 
 	log.Printf("Search Feed Type[%s] Site[%s] For URI[%s]\n", feed.Type, feed.Name, feed.URI)
 
-	// Retrieve the data to search.
+	// 检索要搜索的数据。
 	document, err := m.retrieve(feed)
 	if err != nil {
 		return nil, err
 	}
 
 	for _, channelItem := range document.Channel.Item {
-		// Check the title for the search term.
+		// 检查标题是否包含搜索词。
 		matched, err := regexp.MatchString(searchTerm, channelItem.Title)
 		if err != nil {
 			return nil, err
 		}
 
-		// If we found a match save the result.
+		// 如果我们找到了匹配，保存结果。
 		if matched {
 			results = append(results, &search.Result{
 				Field:   "Title",
@@ -93,13 +93,13 @@ func (m rssMatcher) Search(feed *search.Feed, searchTerm string) ([]*search.Resu
 			})
 		}
 
-		// Check the description for the search term.
+		// 检查描述是否包含搜索词。
 		matched, err = regexp.MatchString(searchTerm, channelItem.Description)
 		if err != nil {
 			return nil, err
 		}
 
-		// If we found a match save the result.
+		// 如果我们找到了匹配，保存结果。
 		if matched {
 			results = append(results, &search.Result{
 				Field:   "Description",
@@ -111,29 +111,29 @@ func (m rssMatcher) Search(feed *search.Feed, searchTerm string) ([]*search.Resu
 	return results, nil
 }
 
-// retrieve performs a HTTP Get request for the rss feed and decodes the results.
+// retrieve 对 rss 订阅源执行 HTTP Get 请求并解码结果。
 func (m rssMatcher) retrieve(feed *search.Feed) (*rssDocument, error) {
 	if feed.URI == "" {
 		return nil, errors.New("No rss feed uri provided")
 	}
 
-	// Retrieve the rss feed document from the web.
+	// 从 web 检索 rss 订阅源文档。
 	resp, err := http.Get(feed.URI)
 	if err != nil {
 		return nil, err
 	}
 
-	// Close the response once we return from the function.
+	// 在从函数返回后关闭响应。
 	defer resp.Body.Close()
 
-	// Check the status code for a 200 so we know we have received a
-	// proper response.
+	// 检查状态码是否为 200，以便我们知道
+	// 已收到正确的响应。
 	if resp.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Response Error %d\n", resp.StatusCode)
 	}
 
-	// Decode the rss feed document into our struct type.
-	// We don't need to check for errors, the caller can do this.
+	// 将 rss 订阅源文档解码到我们的结构类型中。
+	// 我们不需要检查错误，调用者可以这样做。
 	var document rssDocument
 	err = xml.NewDecoder(resp.Body).Decode(&document)
 	return &document, err

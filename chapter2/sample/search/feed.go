@@ -7,30 +7,30 @@ import (
 
 const dataFile = "data/data.json"
 
-// Feed contains information we need to process a feed.
+// Feed 包含处理订阅源所需的信息。
 type Feed struct {
 	Name string `json:"site"`
 	URI  string `json:"link"`
 	Type string `json:"type"`
 }
 
-// RetrieveFeeds reads and unmarshals the feed data file.
+// RetrieveFeeds 读取并解组订阅源数据文件。
 func RetrieveFeeds() ([]*Feed, error) {
-	// Open the file.
+	// 打开文件。
 	file, err := os.Open(dataFile)
 	if err != nil {
 		return nil, err
 	}
 
-	// Schedule the file to be closed once
-	// the function returns.
+	// 安排在函数返回后
+	// 关闭文件。
 	defer file.Close()
 
-	// Decode the file into a slice of pointers
-	// to Feed values.
+	// 将文件解码为指向
+	// Feed 值的指针切片。
 	var feeds []*Feed
 	err = json.NewDecoder(file).Decode(&feeds)
 
-	// We don't need to check for errors, the caller can do this.
+	// 我们不需要检查错误，调用者可以这样做。
 	return feeds, err
 }

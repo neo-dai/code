@@ -1,4 +1,4 @@
-// Sample program demonstrating struct composition.
+// 示例程序，演示结构组合。
 package main
 
 import (
@@ -15,17 +15,17 @@ func init() {
 
 // =============================================================================
 
-// Data is the structure of the data we are copying.
+// Data 是我们正在复制的数据的结构。
 type Data struct {
 	Line string
 }
 
 // =============================================================================
 
-// Xenia is a system we need to pull data from.
+// Xenia 是我们需要从中提取数据的系统。
 type Xenia struct{}
 
-// Pull knows how to pull data out of Xenia.
+// Pull 知道如何从 Xenia 中提取数据。
 func (Xenia) Pull(d *Data) error {
 	switch rand.Intn(10) {
 	case 1, 9:
@@ -41,10 +41,10 @@ func (Xenia) Pull(d *Data) error {
 	}
 }
 
-// Pillar is a system we need to store data into.
+// Pillar 是我们需要将数据存储到的系统。
 type Pillar struct{}
 
-// Store knows how to store data into Pillar.
+// Store 知道如何将数据存储到 Pillar 中。
 func (Pillar) Store(d Data) error {
 	fmt.Println("Out:", d.Line)
 	return nil
@@ -52,7 +52,7 @@ func (Pillar) Store(d Data) error {
 
 // =============================================================================
 
-// System wraps Xenia and Pillar together into a single system.
+// System 将 Xenia 和 Pillar 包装到一个系统中。
 type System struct {
 	Xenia
 	Pillar
@@ -60,7 +60,7 @@ type System struct {
 
 // =============================================================================
 
-// pull knows how to pull bulks of data from Xenia.
+// pull 知道如何从 Xenia 批量提取数据。
 func pull(x *Xenia, data []Data) (int, error) {
 	for i := range data {
 		if err := x.Pull(&data[i]); err != nil {
@@ -71,7 +71,7 @@ func pull(x *Xenia, data []Data) (int, error) {
 	return len(data), nil
 }
 
-// store knows how to store bulks of data into Pillar.
+// store 知道如何将数据批量存储到 Pillar 中。
 func store(p *Pillar, data []Data) (int, error) {
 	for i, d := range data {
 		if err := p.Store(d); err != nil {
@@ -82,7 +82,7 @@ func store(p *Pillar, data []Data) (int, error) {
 	return len(data), nil
 }
 
-// Copy knows how to pull and store data from the System.
+// Copy 知道如何从 System 中提取和存储数据。
 func Copy(sys *System, batch int) error {
 	data := make([]Data, batch)
 
@@ -104,7 +104,7 @@ func Copy(sys *System, batch int) error {
 
 func main() {
 
-	// Initialize the system for use.
+	// 初始化系统以供使用。
 	sys := System{
 		Xenia:  Xenia{},
 		Pillar: Pillar{},

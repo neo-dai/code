@@ -1,10 +1,10 @@
-// Package words provides support for counting words.
+// Package words 提供计数单词的支持。
 package words
 
 import "strings"
 
-// CountWords counts the number of words in the specified
-// string and returns the count.
+// CountWords 计算指定字符串中
+// 单词的数量并返回计数。
 func CountWords(text string) (count int) {
 	count = len(strings.Fields(text))
 	return

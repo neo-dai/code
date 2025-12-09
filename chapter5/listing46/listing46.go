@@ -1,18 +1,18 @@
-// Sample program to show how you can't always get the
-// address of a value.
+// 示例程序，展示为什么不能总是
+// 获取值的地址。
 package main
 
 import "fmt"
 
-// duration is a type with a base type of int.
+// duration 是基本类型为 int 的类型。
 type duration int
 
-// format pretty-prints the duration value.
+// format 美化打印 duration 值。
 func (d *duration) pretty() string {
 	return fmt.Sprintf("Duration: %d", *d)
 }
 
-// main is the entry point for the application.
+// main 是应用程序的入口点。
 func main() {
 	duration(42).pretty()
 

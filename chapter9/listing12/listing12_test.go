@@ -1,5 +1,5 @@
-// Sample test to show how to mock an HTTP GET call internally.
-// Differs slightly from the book to show more.
+// 示例测试，展示如何在内部模拟 HTTP GET 调用。
+// 与书中略有不同以展示更多内容。
 package listing12
 
 import (
@@ -13,7 +13,7 @@ import (
 const checkMark = "\u2713"
 const ballotX = "\u2717"
 
-// feed is mocking the XML document we except to receive.
+// feed 是模拟我们期望接收的 XML 文档。
 var feed = `<?xml version="1.0" encoding="UTF-8"?>
 <rss>
 <channel>
@@ -29,7 +29,7 @@ var feed = `<?xml version="1.0" encoding="UTF-8"?>
 </channel>
 </rss>`
 
-// mockServer returns a pointer to a server to handle the get call.
+// mockServer 返回一个指向服务器的指针来处理 get 调用。
 func mockServer() *httptest.Server {
 	f := func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
@@ -40,8 +40,8 @@ func mockServer() *httptest.Server {
 	return httptest.NewServer(http.HandlerFunc(f))
 }
 
-// TestDownload validates the http Get function can download content
-// and the content can be unmarshaled and clean.
+// TestDownload 验证 http Get 函数可以下载内容
+// 并且内容可以被解组和清理。
 func TestDownload(t *testing.T) {
 	statusCode := http.StatusOK
 
@@ -89,8 +89,8 @@ func TestDownload(t *testing.T) {
 	}
 }
 
-// Item defines the fields associated with the item tag in
-// the buoy RSS document.
+// Item 定义与浮标 RSS 文档中
+// item 标签相关联的字段。
 type Item struct {
 	XMLName     xml.Name `xml:"item"`
 	Title       string   `xml:"title"`
@@ -98,8 +98,8 @@ type Item struct {
 	Link        string   `xml:"link"`
 }
 
-// Channel defines the fields associated with the channel tag in
-// the buoy RSS document.
+// Channel 定义与浮标 RSS 文档中
+// channel 标签相关联的字段。
 type Channel struct {
 	XMLName     xml.Name `xml:"channel"`
 	Title       string   `xml:"title"`
@@ -109,7 +109,7 @@ type Channel struct {
 	Items       []Item   `xml:"item"`
 }
 
-// Document defines the fields associated with the buoy RSS document.
+// Document 定义与浮标 RSS 文档相关联的字段。
 type Document struct {
 	XMLName xml.Name `xml:"rss"`
 	Channel Channel  `xml:"channel"`

@@ -1,5 +1,5 @@
-// This sample program demonstrates how to use the work package
-// to use a pool of goroutines to get work done.
+// 这个示例程序演示如何使用 work 包
+// 来使用 goroutine 池来完成工作。
 package main
 
 import (
@@ -10,7 +10,7 @@ import (
 	"github.com/goinaction/code/chapter7/patterns/work"
 )
 
-// names provides a set of names to display.
+// names 提供要显示的一组名称。
 var names = []string{
 	"steve",
 	"bob",
@@ -19,37 +19,37 @@ var names = []string{
 	"jason",
 }
 
-// namePrinter provides special support for printing names.
+// namePrinter 为打印名称提供特殊支持。
 type namePrinter struct {
 	name string
 }
 
-// Task implements the Worker interface.
+// Task 实现 Worker 接口。
 func (m *namePrinter) Task() {
 	log.Println(m.name)
 	time.Sleep(time.Second)
 }
 
-// main is the entry point for all Go programs.
+// main 是所有 Go 程序的入口点。
 func main() {
-	// Create a work pool with 2 goroutines.
+	// 创建一个有 2 个 goroutine 的工作池。
 	p := work.New(2)
 
 	var wg sync.WaitGroup
 	wg.Add(100 * len(names))
 
 	for i := 0; i < 100; i++ {
-		// Iterate over the slice of names.
+		// 迭代名称切片。
 		for _, name := range names {
-			// Create a namePrinter and provide the
-			// specific name.
+			// 创建一个 namePrinter 并提供
+			// 特定名称。
 			np := namePrinter{
 				name: name,
 			}
 
 			go func() {
-				// Submit the task to be worked on. When RunTask
-				// returns we know it is being handled.
+				// 提交要处理的任务。当 RunTask
+				// 返回时，我们知道它正在被处理。
 				p.Run(&np)
 				wg.Done()
 			}()
@@ -58,7 +58,7 @@ func main() {
 
 	wg.Wait()
 
-	// Shutdown the work pool and wait for all existing work
-	// to be completed.
+	// 关闭工作池并等待所有现有工作
+	// 完成。
 	p.Shutdown()
 }

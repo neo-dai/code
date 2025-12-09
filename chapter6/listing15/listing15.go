@@ -1,6 +1,6 @@
-// This sample program demonstrates how to use the atomic
-// package functions Store and Load to provide safe access
-// to numeric types.
+// 这个示例程序演示如何使用 atomic
+// 包的 Store 和 Load 函数来提供对
+// 数值类型的安全访问。
 package main
 
 import (
@@ -11,44 +11,44 @@ import (
 )
 
 var (
-	// shutdown is a flag to alert running goroutines to shutdown.
+	// shutdown 是一个标志，用于通知正在运行的 goroutine 关闭。
 	shutdown int64
 
-	// wg is used to wait for the program to finish.
+	// wg 用于等待程序完成。
 	wg sync.WaitGroup
 )
 
-// main is the entry point for all Go programs.
+// main 是所有 Go 程序的入口点。
 func main() {
-	// Add a count of two, one for each goroutine.
+	// 添加计数 2，每个 goroutine 一个。
 	wg.Add(2)
 
-	// Create two goroutines.
+	// 创建两个 goroutine。
 	go doWork("A")
 	go doWork("B")
 
-	// Give the goroutines time to run.
+	// 给 goroutine 运行的时间。
 	time.Sleep(1 * time.Second)
 
-	// Safely flag it is time to shutdown.
+	// 安全地标记现在是关闭的时间。
 	fmt.Println("Shutdown Now")
 	atomic.StoreInt64(&shutdown, 1)
 
-	// Wait for the goroutines to finish.
+	// 等待 goroutine 完成。
 	wg.Wait()
 }
 
-// doWork simulates a goroutine performing work and
-// checking the Shutdown flag to terminate early.
+// doWork 模拟一个执行工作的 goroutine
+// 并检查 Shutdown 标志以提前终止。
 func doWork(name string) {
-	// Schedule the call to Done to tell main we are done.
+	// 安排调用 Done 以告诉 main 我们已完成。
 	defer wg.Done()
 
 	for {
 		fmt.Printf("Doing %s Work\n", name)
 		time.Sleep(250 * time.Millisecond)
 
-		// Do we need to shutdown.
+		// 我们需要关闭吗。
 		if atomic.LoadInt64(&shutdown) == 1 {
 			fmt.Printf("Shutting %s Down\n", name)
 			break

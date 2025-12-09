@@ -1,5 +1,5 @@
-// Package search : seachers.go contains all the different implementations
-// for the existing searchers.
+// Package search : seachers.go 包含
+// 现有搜索器的所有不同实现。
 package search
 
 import (
@@ -8,26 +8,26 @@ import (
 	"time"
 )
 
-// init is called before main.
+// init 在 main 之前被调用。
 func init() {
 	rand.Seed(time.Now().UnixNano())
 }
 
-// Google provides support for Google searches.
+// Google 提供对 Google 搜索的支持。
 type google struct{}
 
-// Search implements the Searcher interface. It performs a search
-// against Google.
+// Search 实现 Searcher 接口。它对
+// Google 执行搜索。
 func (g google) Search(term string, results chan<- []Result) {
 	log.Printf("Google : Search : Started : search term[%s]\n", term)
 
-	// Slice for the results.
+	// 结果切片。
 	var r []Result
 
-	// Simulate an amount of time for the search.
+	// 模拟搜索的时间量。
 	time.Sleep(time.Millisecond * time.Duration(rand.Int63n(900)))
 
-	// Simulate a result for the search.
+	// 模拟搜索结果。
 	r = append(r, Result{
 		Engine:      "Google",
 		Title:       "The Go Programming Language",
@@ -39,21 +39,21 @@ func (g google) Search(term string, results chan<- []Result) {
 	results <- r
 }
 
-// Bing provides support for Bing searches.
+// Bing 提供对 Bing 搜索的支持。
 type bing struct{}
 
-// Search implements the Searcher interface. It performs a search
-// against Bing.
+// Search 实现 Searcher 接口。它对
+// Bing 执行搜索。
 func (b bing) Search(term string, results chan<- []Result) {
 	log.Printf("Bing : Search : Started : search term [%s]\n", term)
 
-	// Slice for the results.
+	// 结果切片。
 	var r []Result
 
-	// Simulate an amount of time for the search.
+	// 模拟搜索的时间量。
 	time.Sleep(time.Millisecond * time.Duration(rand.Int63n(900)))
 
-	// Simulate a result for the search.
+	// 模拟搜索结果。
 	r = append(r, Result{
 		Engine:      "Bing",
 		Title:       "A Tour of Go",
@@ -65,21 +65,21 @@ func (b bing) Search(term string, results chan<- []Result) {
 	results <- r
 }
 
-// Yahoo provides support for Yahoo searches.
+// Yahoo 提供对 Yahoo 搜索的支持。
 type yahoo struct{}
 
-// Search implements the Searcher interface. It performs a search
-// against Yahoo.
+// Search 实现 Searcher 接口。它对
+// Yahoo 执行搜索。
 func (y yahoo) Search(term string, results chan<- []Result) {
 	log.Printf("Yahoo : Search : Started : search term [%s]\n", term)
 
-	// Slice for the results.
+	// 结果切片。
 	var r []Result
 
-	// Simulate an amount of time for the search.
+	// 模拟搜索的时间量。
 	time.Sleep(time.Millisecond * time.Duration(rand.Int63n(900)))
 
-	// Simulate a result for the search.
+	// 模拟搜索结果。
 	r = append(r, Result{
 		Engine:      "Yahoo",
 		Title:       "Go Playground",

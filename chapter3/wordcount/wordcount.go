@@ -1,4 +1,4 @@
-// Sample program to show how to show you how to briefly work with io.
+// 示例程序，展示如何简要地使用 io。
 package main
 
 import (
@@ -9,7 +9,7 @@ import (
 	"github.com/goinaction/code/chapter3/words"
 )
 
-// main is the entry point for the application.
+// main 是应用程序的入口点。
 func main() {
 	filename := os.Args[1]
 

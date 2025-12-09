@@ -1,4 +1,4 @@
-// This sample program demonstrates how to use the base log package.
+// 这个示例程序演示如何使用基本的 log 包。
 package main
 
 import (
@@ -11,12 +11,12 @@ func init() {
 }
 
 func main() {
-	// Println writes to the standard logger.
+	// Println 写入标准记录器。
 	log.Println("message")
 
-	// Fatalln is Println() followed by a call to os.Exit(1).
+	// Fatalln 是 Println() 后跟对 os.Exit(1) 的调用。
 	log.Fatalln("fatal message")
 
-	// Panicln is Println() followed by a call to panic().
+	// Panicln 是 Println() 后跟对 panic() 的调用。
 	log.Panicln("panic message")
 }

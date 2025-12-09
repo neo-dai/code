@@ -1,5 +1,5 @@
-// Example is provided with help by Gabriel Aszalos.
-// Package runner manages the running and lifetime of a process.
+// 示例由 Gabriel Aszalos 提供帮助。
+// Package runner 管理进程的运行和生命周期。
 package runner
 
 import (
@@ -9,31 +9,31 @@ import (
 	"time"
 )
 
-// Runner runs a set of tasks within a given timeout and can be
-// shut down on an operating system interrupt.
+// Runner 在给定超时时间内运行一组任务，并且可以
+// 在操作系统中断时关闭。
 type Runner struct {
-	// interrupt channel reports a signal from the
-	// operating system.
+	// interrupt 通道报告来自
+	// 操作系统的信号。
 	interrupt chan os.Signal
 
-	// complete channel reports that processing is done.
+	// complete 通道报告处理已完成。
 	complete chan error
 
-	// timeout reports that time has run out.
+	// timeout 报告时间已用完。
 	timeout <-chan time.Time
 
-	// tasks holds a set of functions that are executed
-	// synchronously in index order.
+	// tasks 保存一组按索引顺序
+	// 同步执行的函数。
 	tasks []func(int)
 }
 
-// ErrTimeout is returned when a value is received on the timeout channel.
+// ErrTimeout 在 timeout 通道上接收到值时返回。
 var ErrTimeout = errors.New("received timeout")
 
-// ErrInterrupt is returned when an event from the OS is received.
+// ErrInterrupt 在接收到来自操作系统的事件时返回。
 var ErrInterrupt = errors.New("received interrupt")
 
-// New returns a new ready-to-use Runner.
+// New 返回一个新的可用 Runner。
 func New(d time.Duration) *Runner {
 	return &Runner{
 		interrupt: make(chan os.Signal, 1),
@@ -42,58 +42,58 @@ func New(d time.Duration) *Runner {
 	}
 }
 
-// Add attaches tasks to the Runner. A task is a function that
-// takes an int ID.
+// Add 将任务附加到 Runner。任务是一个
+// 接受 int ID 的函数。
 func (r *Runner) Add(tasks ...func(int)) {
 	r.tasks = append(r.tasks, tasks...)
 }
 
-// Start runs all tasks and monitors channel events.
+// Start 运行所有任务并监控通道事件。
 func (r *Runner) Start() error {
-	// We want to receive all interrupt based signals.
+	// 我们想要接收所有基于中断的信号。
 	signal.Notify(r.interrupt, os.Interrupt)
 
-	// Run the different tasks on a different goroutine.
+	// 在不同的 goroutine 上运行不同的任务。
 	go func() {
 		r.complete <- r.run()
 	}()
 
 	select {
-	// Signaled when processing is done.
+	// 处理完成时发出信号。
 	case err := <-r.complete:
 		return err
 
-	// Signaled when we run out of time.
+	// 时间用完时发出信号。
 	case <-r.timeout:
 		return ErrTimeout
 	}
 }
 
-// run executes each registered task.
+// run 执行每个已注册的任务。
 func (r *Runner) run() error {
 	for id, task := range r.tasks {
-		// Check for an interrupt signal from the OS.
+		// 检查来自操作系统的中断信号。
 		if r.gotInterrupt() {
 			return ErrInterrupt
 		}
 
-		// Execute the registered task.
+		// 执行已注册的任务。
 		task(id)
 	}
 
 	return nil
 }
 
-// gotInterrupt verifies if the interrupt signal has been issued.
+// gotInterrupt 验证是否已发出中断信号。
 func (r *Runner) gotInterrupt() bool {
 	select {
-	// Signaled when an interrupt event is sent.
+	// 发送中断事件时发出信号。
 	case <-r.interrupt:
-		// Stop receiving any further signals.
+		// 停止接收任何进一步的信号。
 		signal.Stop(r.interrupt)
 		return true
 
-	// Continue running as normal.
+	// 继续正常运行。
 	default:
 		return false
 	}

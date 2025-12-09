@@ -14,13 +14,13 @@ func printer(ch chan int) {
 	wg.Done()
 }
 
-// main is the entry point for the program.
+// main 是程序的入口点。
 func main() {
 	c := make(chan int)
 	go printer(c)
 	wg.Add(1)
 
-	// Send 10 integers on the channel.
+	// 在通道上发送 10 个整数。
 	for i := 1; i <= 10; i++ {
 		c <- i
 	}

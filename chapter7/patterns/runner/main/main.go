@@ -1,6 +1,6 @@
-// This sample program demonstrates how to use a channel to
-// monitor the amount of time the program is running and terminate
-// the program if it runs too long.
+// 这个示例程序演示如何使用通道
+// 监控程序运行的时间量，并在
+// 运行时间过长时终止程序。
 package main
 
 import (
@@ -11,20 +11,20 @@ import (
 	"github.com/goinaction/code/chapter7/patterns/runner"
 )
 
-// timeout is the number of second the program has to finish.
+// timeout 是程序完成所需的秒数。
 const timeout = 3 * time.Second
 
-// main is the entry point for the program.
+// main 是程序的入口点。
 func main() {
 	log.Println("Starting work.")
 
-	// Create a new timer value for this run.
+	// 为此次运行创建新的计时器值。
 	r := runner.New(timeout)
 
-	// Add the tasks to be run.
+	// 添加要运行的任务。
 	r.Add(createTask(), createTask(), createTask())
 
-	// Run the tasks and handle the result.
+	// 运行任务并处理结果。
 	if err := r.Start(); err != nil {
 		switch err {
 		case runner.ErrTimeout:
@@ -39,8 +39,8 @@ func main() {
 	log.Println("Process ended.")
 }
 
-// createTask returns an example task that sleeps for the specified
-// number of seconds based on the id.
+// createTask 返回一个示例任务，该任务根据
+// id 休眠指定的秒数。
 func createTask() func(int) {
 	return func(id int) {
 		log.Printf("Processor - Task #%d.", id)

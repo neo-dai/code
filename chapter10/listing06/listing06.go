@@ -1,49 +1,49 @@
-// Sample program to show how you can personally mock concrete types when
-// you need to for your own packages or tests.
+// 示例程序，展示当你需要为自己的包或测试
+// 模拟具体类型时如何操作。
 package main
 
 import (
 	"github.com/goinaction/code/chapter10/listing06/pubsub"
 )
 
-// publisher is an interface to allow this package to mock the
-// pubsub package support.
+// publisher 是一个接口，允许此包
+// 模拟 pubsub 包的支持。
 type publisher interface {
 	Publish(key string, v interface{}) error
 	Subscribe(key string) error
 }
 
-// mock is a concrete type to help support the mocking of the
-// pubsub package.
+// mock 是一个具体类型，用于帮助支持
+// pubsub 包的模拟。
 type mock struct{}
 
-// Publish implements the publisher interface for the mock.
+// Publish 为模拟实现 publisher 接口。
 func (m *mock) Publish(key string, v interface{}) error {
 
-	// ADD YOUR MOCK FOR THE PUBLISH CALL.
+	// 在此添加您对 PUBLISH 调用的模拟。
 	return nil
 }
 
-// Subscribe implements the publisher interface for the mock.
+// Subscribe 为模拟实现 publisher 接口。
 func (m *mock) Subscribe(key string) error {
 
-	// ADD YOUR MOCK FOR THE SUBSCRIBE CALL.
+	// 在此添加您对 SUBSCRIBE 调用的模拟。
 	return nil
 }
 
 func main() {
 
-	// Create a slice of publisher interface values. Assign
-	// the address of a pubsub.PubSub value and the address of
-	// a mock value.
+	// 创建一个 publisher 接口值的切片。分配
+	// pubsub.PubSub 值的地址和
+	// mock 值的地址。
 	pubs := []publisher{
 		pubsub.New("localhost"),
 		&mock{},
 	}
 
-	// Range over the interface value to see how the publisher
-	// interface provides the level of decoupling the user needs.
-	// The pubsub package did not need to provide the interface type.
+	// 遍历接口值以查看 publisher
+	// 接口如何提供用户所需的解耦级别。
+	// pubsub 包不需要提供接口类型。
 	for _, p := range pubs {
 		p.Publish("key", "value")
 		p.Subscribe("key")

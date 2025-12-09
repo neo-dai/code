@@ -1,5 +1,5 @@
-// Sample program to show how different functions from the
-// standard library use the io.Writer interface.
+// 示例程序，展示标准库中的不同函数
+// 如何使用 io.Writer 接口。
 package main
 
 import (
@@ -8,18 +8,18 @@ import (
 	"os"
 )
 
-// main is the entry point for the application.
+// main 是应用程序的入口点。
 func main() {
-	// Create a Buffer value and write a string to the buffer.
-	// Using the Write method that implements io.Writer.
+	// 创建一个 Buffer 值并将字符串写入缓冲区。
+	// 使用实现 io.Writer 的 Write 方法。
 	var b bytes.Buffer
 	b.Write([]byte("Hello "))
 
-	// Use Fprintf to concatenate a string to the Buffer.
-	// Passing the address of a bytes.Buffer value for io.Writer.
+	// 使用 Fprintf 将字符串连接到 Buffer。
+	// 为 io.Writer 传递 bytes.Buffer 值的地址。
 	fmt.Fprintf(&b, "World!")
 
-	// Write the content of the Buffer to the stdout device.
-	// Passing the address of a os.File value for io.Writer.
+	// 将 Buffer 的内容写入标准输出设备。
+	// 为 io.Writer 传递 os.File 值的地址。
 	b.WriteTo(os.Stdout)
 }

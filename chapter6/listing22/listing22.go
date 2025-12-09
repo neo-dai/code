@@ -1,5 +1,5 @@
-// This sample program demonstrates how to use an unbuffered
-// channel to simulate a relay race between four goroutines.
+// 这个示例程序演示如何使用无缓冲通道
+// 来模拟四个 goroutine 之间的接力赛。
 package main
 
 import (
@@ -8,55 +8,55 @@ import (
 	"time"
 )
 
-// wg is used to wait for the program to finish.
+// wg 用于等待程序完成。
 var wg sync.WaitGroup
 
-// main is the entry point for all Go programs.
+// main 是所有 Go 程序的入口点。
 func main() {
-	// Create an unbuffered channel.
+	// 创建一个无缓冲通道。
 	baton := make(chan int)
 
-	// Add a count of one for the last runner.
+	// 为最后一个跑步者添加计数 1。
 	wg.Add(1)
 
-	// First runner to his mark.
+	// 第一个跑步者就位。
 	go Runner(baton)
 
-	// Start the race.
+	// 开始比赛。
 	baton <- 1
 
-	// Wait for the race to finish.
+	// 等待比赛结束。
 	wg.Wait()
 }
 
-// Runner simulates a person running in the relay race.
+// Runner 模拟一个人在接力赛中跑步。
 func Runner(baton chan int) {
 	var newRunner int
 
-	// Wait to receive the baton.
+	// 等待接收接力棒。
 	runner := <-baton
 
-	// Start running around the track.
+	// 开始绕跑道跑步。
 	fmt.Printf("Runner %d Running With Baton\n", runner)
 
-	// New runner to the line.
+	// 新跑步者上线。
 	if runner != 4 {
 		newRunner = runner + 1
 		fmt.Printf("Runner %d To The Line\n", newRunner)
 		go Runner(baton)
 	}
 
-	// Running around the track.
+	// 绕跑道跑步。
 	time.Sleep(100 * time.Millisecond)
 
-	// Is the race over.
+	// 比赛结束了吗。
 	if runner == 4 {
 		fmt.Printf("Runner %d Finished, Race Over\n", runner)
 		wg.Done()
 		return
 	}
 
-	// Exchange the baton for the next runner.
+	// 为下一个跑步者交换接力棒。
 	fmt.Printf("Runner %d Exchange With Runner %d\n",
 		runner,
 		newRunner)

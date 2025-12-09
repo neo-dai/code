@@ -6,18 +6,18 @@ import (
 	"errors"
 )
 
-// PostgresDriver provides our implementation for the
-// sql package.
+// PostgresDriver 为 sql 包
+// 提供我们的实现。
 type PostgresDriver struct{}
 
-// Open provides a connection to the database.
+// Open 提供到数据库的连接。
 func (dr PostgresDriver) Open(string) (driver.Conn, error) {
 	return nil, errors.New("Unimplemented")
 }
 
 var d *PostgresDriver
 
-// init is called prior to main.
+// init 在 main 之前被调用。
 func init() {
 	d = new(PostgresDriver)
 	sql.Register("postgres", d)

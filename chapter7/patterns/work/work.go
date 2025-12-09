@@ -1,23 +1,23 @@
-// Example provided with help from Jason Waldrip.
-// Package work manages a pool of goroutines to perform work.
+// 示例由 Jason Waldrip 提供帮助。
+// Package work 管理一个 goroutine 池来执行工作。
 package work
 
 import "sync"
 
-// Worker must be implemented by types that want to use
-// the work pool.
+// Worker 必须由想要使用
+// 工作池的类型实现。
 type Worker interface {
 	Task()
 }
 
-// Pool provides a pool of goroutines that can execute any Worker
-// tasks that are submitted.
+// Pool 提供一个 goroutine 池，可以执行
+// 提交的任何 Worker 任务。
 type Pool struct {
 	work chan Worker
 	wg   sync.WaitGroup
 }
 
-// New creates a new work pool.
+// New 创建一个新的工作池。
 func New(maxGoroutines int) *Pool {
 	p := Pool{
 		work: make(chan Worker),
@@ -36,12 +36,12 @@ func New(maxGoroutines int) *Pool {
 	return &p
 }
 
-// Run submits work to the pool.
+// Run 向池提交工作。
 func (p *Pool) Run(w Worker) {
 	p.work <- w
 }
 
-// Shutdown waits for all the goroutines to shutdown.
+// Shutdown 等待所有 goroutine 关闭。
 func (p *Pool) Shutdown() {
 	close(p.work)
 	p.wg.Wait()
